@@ -32,8 +32,9 @@ This project focuses on analyzing risks and predicting failures in clinical tria
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/b28dbca4/Risk-Analysis-and-Failure-Prediction-in-Clinical-Trials.git
-   cd Risk-Analysis-and-Failure-Prediction-in-Clinical-Trials
+   git clone https://github.com/b28dbca4/Clinical-Trial-Failure-Prediction.git
+   cd Clinical-Trial-Failure-Prediction
+
    ```
 
 2. Create and activate the conda environment:
@@ -75,26 +76,38 @@ Navigate to the `notebooks/` directory and execute the notebooks in order.
 │   ├── final/        # Final processed data
 │   ├── processed/    # Intermediate processed data
 │   └── raw/          # Raw data
-├── models/           # Trained models
 ├── notebooks/        # Jupyter notebooks for analysis
 ├── reports/
 │   ├── figures/      # Generated figures
-│   └── slides/       # Presentation slides
-├── src/              # Source code
-│   ├── __init__.py
-│   ├── config.py     # Configuration settings
-│   ├── data_collection.py  # Data collection scripts
-│   ├── models.py     # Model definitions
-│   ├── preprocessing.py   # Preprocessing functions
-│   ├── utils.py      # Utility functions
-│   └── visualization.py   # Visualization tools
-├── test/             # Unit tests
-│   ├── test_data_validation.py
-│   └── test_processing.py
+│   │   ├── eda_plots/
+│   │   └── model_results/
+│   └── presentations/ # Presentation slides
+├─ src/  # Source code
+|   ├── __init__.py           
+│   ├── data/
+│   │   ├── __init__.py          
+│   │   ├── data_cleaner.py      # Data cleaning utilities
+│   │   ├── data_loader.py       # Data loading functions
+│   │   └── feature_engineering.py # Feature engineering tools
+│   ├── models/
+│   │   ├── __init__.py        
+│   │   ├── model_evaluator.py   # Model evaluation scripts
+│   │   ├── model_interpretation.py # Model interpretation tools
+│   │   └── model_trainer.py     # Model training functions
+│   ├── test/
+│   │   ├── __init__.py        
+│   │   ├── test_data_processing.py # Tests for data processing
+│   │   └── test_models.py       # Tests for models
+│   ├── utils/
+│   │   └── config.py            # Configuration settings
+│   └── visualization/
+│       ├── __init__.py  
+│       ├── dashboard.py         # Dashboard creation
+│       └── plot_utils.py        # Plotting utilities
 ├── environment.yml   # Conda environment file
 ├── requirements.txt  # Python dependencies
 ├── LICENSE           # License file
-└── README.md         # This file
+└── README.md    
 ```
 
 ## Contributing
