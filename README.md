@@ -1,9 +1,11 @@
 # Risk Analysis and Failure Prediction in Clinical Trials
 
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](LICENSE)
-[![NumPy](https://img.shields.io/badge/NumPy-1.21+-blue.svg)](https://numpy.org/)
-[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)](https://jupyter.org/)
+[![NumPy](https://img.shields.io/badge/NumPy-1.26-blue.svg)](https://numpy.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-2.1.1-blue.svg)](https://pandas.pydata.org/)
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.3.1-orange.svg)](https://scikit-learn.org/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-4.0.7-orange.svg)](https://jupyter.org/)
 
 ## Overview
 
@@ -23,7 +25,7 @@ This project focuses on analyzing risks and predicting failures in clinical tria
 
 ### Prerequisites
 
-- Python 3.8 or higher
+- Python 3.11 or higher
 - Conda (recommended for environment management)
 
 ### Setup
@@ -37,7 +39,7 @@ This project focuses on analyzing risks and predicting failures in clinical tria
 2. Create and activate the conda environment:
    ```bash
    conda env create -f environment.yml
-   conda activate clinical-trials-env
+   conda activate ds-env
    ```
 
    Alternatively, install dependencies using pip:
