@@ -8,12 +8,15 @@ __pycache__/
 *.so
 
 #doc
-*.pdf 
+*.pdf
 *.docx
 
 #data 
 *.csv
 *.tsv 
+*.json
+*.jsonl
+*.png
 
 # Distribution / packaging
 .Python
