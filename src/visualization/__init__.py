@@ -1,34 +1,19 @@
-# Import main classes
-from .plot_utils import PlotUtils
+# ============================================================================
+# Visualization Package - Clinical Trial Failure Prediction
+# ============================================================================
+# This package provides visualization utilities for EDA and model evaluation
+#
+# New API (v2.0):
+# - plot_utils: Standalone functions for static plots
+# - dashboard: InteractiveDashboard class for interactive visualizations
+# ============================================================================
+
+# Import main classes and modules
 from .dashboard import InteractiveDashboard
-
-# Import convenience functions
-from .plot_utils import (
-    quick_distribution,
-    quick_correlation,
-    quick_comparison
-)
-
-from .dashboard import create_quick_dashboard
+from . import plot_utils
 
 # Define public API
 __all__ = [
-    # Main classes
-    'PlotUtils',
     'InteractiveDashboard',
-    'EDAVisualizer',
-    'QuestionVisualizer',
-    
-    # Convenience functions
-    'quick_distribution',
-    'quick_correlation',
-    'quick_comparison',
-    'create_quick_dashboard',
-    'quick_eda',
-    'answer_all_questions',
+    'plot_utils',
 ]
-
-# Version info
-__version__ = '1.0.0'
-__author__ = 'Clinical Trial Analysis Team'
-__description__ = 'Comprehensive visualization module for clinical trial failure prediction'

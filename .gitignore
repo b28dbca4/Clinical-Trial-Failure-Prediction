@@ -17,6 +17,7 @@ __pycache__/
 *.json
 *.jsonl
 *.png
+*.py.backup
 
 # Distribution / packaging
 .Python
