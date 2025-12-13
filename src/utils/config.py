@@ -60,3 +60,27 @@ class CollectConfig:
     allowed_features_note: str = (
         "Use only features available at/before StartDate; drop completion dates, results-posted dates, whyStopped, etc."
     )
+    def print_config_summary(self):
+        print("="*80)
+        print("DATA COLLECTION CONFIGURATION")
+        print("="*80)
+        print(f"\nQUERY PARAMETERS:")
+        print(f"  Query Term:     {self.query_term}")
+        print(f"  Study Type:     {self.study_type_filter}")
+        print(f"  Phases:         {', '.join(self.phase_filter) if self.phase_filter else 'All'}")
+        print(f"  Status Filter:  {', '.join(self.overall_status_filter) if self.overall_status_filter else 'All'}")
+
+        print(f"\nCOLLECTION LIMITS:")
+        print(f"  Max Studies:    {self.max_studies:,}")
+        print(f"  Page Size:      {self.page_size:,}")
+
+        print(f"\nAPI SETTINGS:")
+        print(f"  Sleep Time:     {self.sleep_s}s")
+        print(f"  Timeout:        {self.timeout_s}s")
+        print(f"  Max Retries:    {self.max_retries}")
+        print(f"  Retry Delay:    {self.retry_delay_s}s - {self.max_retry_delay_s}s")
+        print(f"  Retry Jitter:   ±{self.retry_jitter_s}s")
+
+        print(f"\nPREDICTION TASK:")
+        print(f"  Timepoint:      {self.prediction_time}")
+        print(f"  Label:          {self.label_definition}")

@@ -138,7 +138,8 @@ def _q_escape(s: str) -> str:
     if not s:
         return s
     if any(ch.isspace() for ch in s) or any(ch in s for ch in ['"', ":", "(", ")", "{", "}", "[", "]"]):
-        return f'"{s.replace(chr(34), r"\"")}"'
+        escaped = s.replace('"', '\\"')
+        return f'"{escaped}"'
     return s
 
 def _or_group(values: List[str]) -> str:
@@ -215,6 +216,16 @@ def build_query_params(cfg: CollectConfig) -> Dict[str, Any]:
 
     return params
 
+def _mask_home(path: Path | str) -> str:
+    """
+    Replace home directory with '~' for safe logging/output.
+    """
+    p = Path(path)
+    try:
+        return str(p).replace(str(Path.home()), "~")
+    except Exception:
+        return str(p)
+
 # Step 1: Smoke test
 def api_smoke_test(cfg: CollectConfig) -> Tuple[bool, Dict[str, Any]]:
     """Test API connectivity and query validity.
@@ -253,9 +264,9 @@ def api_smoke_test(cfg: CollectConfig) -> Tuple[bool, Dict[str, Any]]:
     ok = bool(200 <= status_code < 300 and info["has_studies_key"])
     
     if ok:
-        logger.info(f"✅ Smoke test passed: {info['studies_len']} studies found")
+        logger.info(f"Smoke test passed: {info['studies_len']} studies found")
     else:
-        logger.warning(f"⚠️ Smoke test failed or no studies found")
+        logger.warning(f"Smoke test failed or no studies found")
     
     return ok, info
 
@@ -515,10 +526,10 @@ def collect_raw_jsonl(cfg: CollectConfig) -> Tuple[Path, Path]:
     total_raw = 0
     json_parse_errors = 0
     
-    logger.info(f"Output files:")
-    logger.info(f"  Raw JSONL: {raw_path}")
-    logger.info(f"  Log: {log_path}")
-    logger.info(f"  Metadata: {meta_path}")
+    logger.info("Output files:")
+    logger.info(f"  Raw JSONL: {_mask_home(raw_path)}")
+    logger.info(f"  Log: {_mask_home(log_path)}")
+    logger.info(f"  Metadata: {_mask_home(meta_path)}")
 
     with open(raw_path, "w", encoding="utf-8") as f_raw, open(log_path, "w", encoding="utf-8") as f_log:
         _safe_jsonl_write_line(f_log, {"event": "run_start", **run_meta})
@@ -571,9 +582,9 @@ def collect_raw_jsonl(cfg: CollectConfig) -> Tuple[Path, Path]:
         json.dump(run_meta_out, f_meta, ensure_ascii=False, indent=2)
     
     logger.info(f"Collection complete: {total_raw} studies collected")
-    logger.info(f"   SHA256: {raw_sha256[:16]}...")
+    logger.info(f"  SHA256: {raw_sha256[:16]}...")
     if json_parse_errors > 0:
-        logger.warning(f"   ⚠️ {json_parse_errors} JSON write errors")
+        logger.warning(f"  {json_parse_errors} JSON write errors")
 
     return raw_path, log_path
 
@@ -654,7 +665,7 @@ def flatten_raw_jsonl_to_csv(
     kept_records = len(best)
     dup_skipped = total_lines - parse_errors - kept_records
     
-    logger.info(f"✅ Flattening complete: {csv_out_path.name}")
+    logger.info(f"Flattening complete: {csv_out_path.name}")
     logger.info(f"   Total lines: {total_lines}")
     logger.info(f"   Kept records: {kept_records}")
     logger.info(f"   Parse errors: {parse_errors}")
@@ -717,7 +728,7 @@ def raw_quality_report(raw_jsonl_path: Path, max_lines: Optional[int] = None) ->
                     missing_counts[name] += 1
 
     report = {
-        "raw_path": str(raw_jsonl_path),
+        "raw_path": _mask_home(raw_jsonl_path),
         "total_lines_read": total,
         "json_parse_errors": parse_errors,
         "parse_error_rate": parse_errors / max(total, 1),
