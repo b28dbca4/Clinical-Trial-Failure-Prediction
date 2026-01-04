@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from scipy.stats import chi2_contingency, mannwhitneyu
 from sklearn.metrics import (
     ConfusionMatrixDisplay,
     PrecisionRecallDisplay,
@@ -14,12 +16,75 @@ from sklearn.metrics import (
 )
 
 # =====================================================================
-# GLOBAL STYLE
+# GLOBAL STYLE & CONSTANTS
 # =====================================================================
 
 sns.set(style="whitegrid", font_scale=1.1)
 DEFAULT_FIGSIZE: Tuple[int, int] = (8, 5)
 DEFAULT_DPI: int = 150
+ALPHA_LEVEL: float = 0.05
+
+# Color palettes for EDA
+OUTCOME_COLORS: Dict[int, str] = {
+    0: '#e74c3c',  # Fail - Red
+    1: '#27ae60'   # Success - Green
+}
+
+SPONSOR_COLORS: Dict[str, str] = {
+    'INDUSTRY': '#3498db',
+    'OTHER': '#95a5a6',
+    'NIH': '#9b59b6',
+    'FED': '#e67e22',
+    'NETWORK': '#1abc9c',
+    'INDIV': '#f1c40f'
+}
+
+
+# =====================================================================
+# DATA CLASSES FOR STATISTICAL RESULTS
+# =====================================================================
+
+@dataclass
+class ChiSquareResult:
+    """Kết quả kiểm định Chi-square với effect size."""
+    chi2: float
+    p_value: float
+    dof: int
+    expected: np.ndarray
+    cramers_v: float
+    effect_interpretation: str
+    n_samples: int
+    n_rows: int
+    n_cols: int
+    is_significant: bool
+    
+    def __str__(self) -> str:
+        sig = "Có ý nghĩa" if self.is_significant else "Không có ý nghĩa"
+        return (
+            f"Chi-square: χ²={self.chi2:.4f}, p={self.p_value:.2e}, "
+            f"Cramér's V={self.cramers_v:.4f} ({self.effect_interpretation}), {sig}"
+        )
+
+
+@dataclass
+class MannWhitneyResult:
+    """Kết quả kiểm định Mann-Whitney U với effect size."""
+    statistic: float
+    p_value: float
+    rank_biserial: float
+    effect_interpretation: str
+    n1: int
+    n2: int
+    median1: float
+    median2: float
+    is_significant: bool
+    
+    def __str__(self) -> str:
+        sig = "Có ý nghĩa" if self.is_significant else "Không có ý nghĩa"
+        return (
+            f"Mann-Whitney U: U={self.statistic:,.0f}, p={self.p_value:.2e}, "
+            f"r={self.rank_biserial:.4f} ({self.effect_interpretation}), {sig}"
+        )
 
 
 # =====================================================================
