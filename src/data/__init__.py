@@ -18,13 +18,6 @@ The module encompasses the following components:
 - SRS: Software Requirements Specification
 - ML: Machine Learning
 
-1.4 References
-- IEEE 830-1998: Recommended Practice for Software Requirements Specifications
-- Project README.md for overall project documentation
-
-1.5 Overview
-This __init__.py file initializes the data package, providing lazy-loaded imports for efficient module usage. It exposes key functions and classes from submodules while maintaining a clean API.
-
 2. Overall Description
 
 2.1 Product Perspective
@@ -47,14 +40,10 @@ Intended for data scientists and researchers working on clinical trial analysis.
 3.1 External Interface Requirements
 - Imports from submodules: data_loader, data_cleaner, feature_engineering
 
-3.2 Functional Requirements
-- Lazy loading of module components to optimize import time
-- Logging setup for debugging and monitoring
 """
 
 from __future__ import annotations
 
-# Public symbol lists (used for lazy imports)
 _data_loader_exports = [
     "build_query_params",
     "api_smoke_test",
@@ -73,11 +62,14 @@ _data_cleaner_exports = [
     "create_data_dictionary",
 ]
 
-# Feature engineering module may be empty; import lazily if available
-try:
-    from . import feature_engineering as feature_engineering
-except Exception:
-    feature_engineering = None
+_feature_engineering_exports = [
+    "FeatureEngineer",
+    "FeatureScaler",
+]
+
+from . import data_loader as data_loader
+from . import data_cleaner as data_cleaner
+from . import feature_engineering as feature_engineering
 
 __all__ = [
     # data_loader
@@ -95,4 +87,8 @@ __all__ = [
     "sanity_checks",
     "split_data",
     "create_data_dictionary",
+
+    # feature_engineering
+    "FeatureEngineer",
+    "FeatureScaler",
 ]
