@@ -24,7 +24,16 @@ if not logger.handlers:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
-
+    
+def _mask_home(path: Path | str) -> str:
+    """
+    Replace home directory with '~' for safe logging/output.
+    """
+    p = Path(path)
+    try:
+        return str(p).replace(str(Path.home()), "~")
+    except Exception:
+        return str(p)
 
 # =============================================================================
 # Configuration Class
@@ -64,7 +73,7 @@ def load_raw_data(csv_path: Union[str, Path]) -> pd.DataFrame:
     Returns:
         DataFrame with loaded data
     """
-    logger.info(f"Loading data from {csv_path}")
+    logger.info(f"Loading data from {_mask_home(csv_path)}")
     df = pd.read_csv(csv_path, low_memory=False)
     logger.info(f"Loaded {len(df):,} rows, {len(df.columns)} columns")
     return df
@@ -79,6 +88,7 @@ def standardize_dtypes(
     Args:
         df: Input DataFrame
         schema: Schema definition with keys:
+                - id_columns: List of identifier column names
                 - date_columns: List of date column names
                 - numeric_columns: List of numeric column names
                 - boolean_columns: List of boolean column names
@@ -108,6 +118,17 @@ def standardize_dtypes(
         "Y": True, "N": False,
         "y": True, "n": False
     }
+    
+    # 0. ID columns (NO TRANSFORMATION - tracked only)
+    for col in schema.get("id_columns", []):
+        if col in df.columns:
+            conversion_log.append({
+                "column": col,
+                "category": "id",
+                "dtype_before": str(df[col].dtype),
+                "dtype_after": str(df[col].dtype),
+                "coerced_to_null": 0
+            })
     
     # 1. Date columns → datetime64[ns]
     for col in schema.get("date_columns", []):
@@ -370,9 +391,9 @@ def split_data(
     split_info["overlap_val_test"] = overlap_val_test
     
     if overlap_train_val + overlap_train_test + overlap_val_test > 0:
-        logger.warning(f"⚠️ Data leakage detected! Overlapping NCT IDs between splits.")
+        logger.warning(f"Data leakage detected! Overlapping NCT IDs between splits.")
     else:
-        logger.info("✅ No overlap between train/val/test splits")
+        logger.info("No overlap between train/val/test splits")
     
     logger.info(f"Split complete: train={len(train):,}, val={len(val):,}, test={len(test):,}")
     
