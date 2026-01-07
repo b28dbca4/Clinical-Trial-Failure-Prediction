@@ -1,46 +1,21 @@
 """
 Models Module - Clinical Trial Failure Prediction
 
-This module provides comprehensive machine learning capabilities:
-- 25+ ML algorithms for comparison
-- Hyperparameter optimization with Optuna
-- Comprehensive model evaluation (30+ metrics)
-- Model interpretation (SHAP, LIME, PDP, ICE)
-- Cross-validation and validation techniques
+This module provides machine learning capabilities for clinical trial prediction:
+- ModelTrainer: Train and compare ML models
+- ModelEvaluator: Evaluate model performance
 
 Main Components:
-- ComprehensiveModelTrainer: Train and compare 25+ models
-- ComprehensiveModelEvaluator: Evaluate with 30+ metrics and 12+ visualizations
-- ModelInterpreter: Interpret predictions with SHAP, LIME, etc.
+- ModelTrainer: Train Logistic Regression, Random Forest, XGBoost, LightGBM
+- ModelEvaluator: Evaluate with metrics and visualizations
 """
 
-from .model_trainer_comprehensive import (
-    ComprehensiveModelTrainer,
-    train_and_compare_all_models
-)
-
-from .model_evaluator_comprehensive import (
-    ComprehensiveModelEvaluator,
-    evaluate_and_compare_models
-)
-
-from .model_interpretation import (
-    ModelInterpreter,
-    interpret_model
-)
+from .model_trainer import ModelTrainer
+from .model_evaluator import ModelEvaluator
 
 __all__ = [
-    # Trainer
-    'ComprehensiveModelTrainer',
-    'train_and_compare_all_models',
-    
-    # Evaluator
-    'ComprehensiveModelEvaluator',
-    'evaluate_and_compare_models',
-    
-    # Interpreter
-    'ModelInterpreter',
-    'interpret_model',
+    'ModelTrainer',
+    'ModelEvaluator',
 ]
 
 # Version
