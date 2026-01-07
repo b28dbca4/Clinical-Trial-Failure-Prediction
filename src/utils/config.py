@@ -7,9 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-# =====================================================================
 # PATH CONFIGURATION
-# =====================================================================
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -28,16 +26,12 @@ MODEL_FIGURES_DIR = FIGURES_DIR / "model_results"
 for dir_path in [PROCESSED_DIR, FINAL_DIR, MODELING_DIR, EDA_FIGURES_DIR, MODEL_FIGURES_DIR]:
     dir_path.mkdir(parents=True, exist_ok=True)
 
-# =====================================================================
 # LABEL DEFINITIONS
-# =====================================================================
 
 SUCCESS_STATUSES: List[str] = ['COMPLETED']
 FAIL_STATUSES: List[str] = ['WITHDRAWN', 'TERMINATED']
 
-# =====================================================================
 # EDA CONFIGURATION
-# =====================================================================
 
 SEED: int = 42
 
@@ -75,9 +69,7 @@ CRAMERS_V_THRESHOLDS: Dict[str, Tuple[float, str]] = {
 ENROLLMENT_BINS: List[int] = [0, 50, 200, 500, float('inf')]
 ENROLLMENT_LABELS: List[str] = ['Nhỏ (<50)', 'Trung bình (50-199)', 'Lớn (200-499)', 'Rất lớn (≥500)']
 
-# =====================================================================
 # API CONFIGURATION
-# =====================================================================
 
 CTGOV_BASE_URL = "https://clinicaltrials.gov/api/v2/studies"
 

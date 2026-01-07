@@ -1,11 +1,11 @@
-# ============================================================================
-# Utils Package - Clinical Trial Failure Prediction
-# ============================================================================
-# This package provides configuration and utility functions for the project
-#
-# Modules:
-# - config: Project paths, constants, and configuration settings
-# ============================================================================
+'''
+Utils Package - Clinical Trial Failure Prediction
+
+This package provides configuration and utility functions for the project
+
+Modules:
+- config: Project paths, constants, and configuration settings
+'''
 
 from .config import (
     # Paths

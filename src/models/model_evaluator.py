@@ -1,8 +1,8 @@
 """
-Module đánh giá mô hình cho dự án Clinical Trial Failure Prediction.
+Model evaluation module for Clinical Trial Failure Prediction project.
 
-Cung cấp các class và hàm tiện ích để đánh giá hiệu suất mô hình,
-phân tích lỗi và tạo báo cáo.
+Provides classes and utility functions for evaluating model performance,
+error analysis and report generation.
 """
 
 import numpy as np
@@ -22,20 +22,20 @@ from sklearn.metrics import (
 
 class ModelEvaluator:
     """
-    Lớp đánh giá và phân tích mô hình phân loại.
+    Class for evaluating and analyzing classification models.
     
     Attributes:
-        model: Mô hình cần đánh giá.
-        feature_names (list): Danh sách tên features.
+        model: Model to evaluate.
+        feature_names (list): List of feature names.
     """
     
     def __init__(self, model: Any, feature_names: List[str]):
         """
-        Khởi tạo ModelEvaluator.
+        Initialize ModelEvaluator.
         
         Args:
-            model: Mô hình đã huấn luyện.
-            feature_names: Danh sách tên các features.
+            model: Trained model.
+            feature_names: List of feature names.
         """
         self.model = model
         self.feature_names = feature_names
@@ -49,15 +49,15 @@ class ModelEvaluator:
         dataset_name: str = 'test'
     ) -> Dict:
         """
-        Đánh giá mô hình trên tập dữ liệu.
+        Evaluate model on dataset.
         
         Args:
             X: Features.
             y: Labels.
-            dataset_name: Tên tập dữ liệu.
+            dataset_name: Name of dataset.
             
         Returns:
-            Dictionary chứa các metrics.
+            Dictionary containing metrics.
         """
         y_pred = self.model.predict(X)
         y_proba = self.model.predict_proba(X)[:, 1]
@@ -87,18 +87,18 @@ class ModelEvaluator:
         target_names: List[str] = None
     ) -> str:
         """
-        Tạo classification report.
+        Generate classification report.
         
         Args:
             X: Features.
             y: Labels.
-            target_names: Tên các class.
+            target_names: Names of classes.
             
         Returns:
-            Classification report dạng string.
+            Classification report as string.
         """
         if target_names is None:
-            target_names = ['That bai (0)', 'Thanh cong (1)']
+            target_names = ['Failed (0)', 'Success (1)']
         
         y_pred = self.model.predict(X)
         return classification_report(y, y_pred, target_names=target_names)
@@ -109,14 +109,14 @@ class ModelEvaluator:
         y: pd.Series
     ) -> Tuple[np.ndarray, Dict]:
         """
-        Tính confusion matrix và các thành phần.
+        Calculate confusion matrix and its components.
         
         Args:
             X: Features.
             y: Labels.
             
         Returns:
-            Tuple gồm (confusion matrix, dict các thành phần).
+            Tuple of (confusion matrix, dict of components).
         """
         y_pred = self.model.predict(X)
         cm = confusion_matrix(y, y_pred)
@@ -133,17 +133,17 @@ class ModelEvaluator:
     
     def get_feature_importance(self) -> pd.DataFrame:
         """
-        Lấy feature importance từ mô hình.
+        Get feature importance from model.
         
         Returns:
-            DataFrame chứa feature importance.
+            DataFrame containing feature importance.
         """
         if hasattr(self.model, 'feature_importances_'):
             importance = self.model.feature_importances_
         elif hasattr(self.model, 'coef_'):
             importance = np.abs(self.model.coef_[0])
         else:
-            raise ValueError("Mo hinh khong ho tro feature importance")
+            raise ValueError("Model does not support feature importance")
         
         df = pd.DataFrame({
             'feature': self.feature_names,
@@ -159,15 +159,15 @@ class ModelEvaluator:
         ids: pd.Series = None
     ) -> pd.DataFrame:
         """
-        Phân tích các trường hợp dự đoán sai.
+        Analyze misclassified cases.
         
         Args:
             X: Features.
             y: Labels.
-            ids: ID của các samples.
+            ids: IDs of samples.
             
         Returns:
-            DataFrame chứa thông tin phân tích lỗi.
+            DataFrame containing error analysis information.
         """
         y_pred = self.model.predict(X)
         y_proba = self.model.predict_proba(X)[:, 1]
@@ -194,13 +194,13 @@ class ModelEvaluator:
     
     def get_error_summary(self, error_df: pd.DataFrame) -> pd.DataFrame:
         """
-        Tổng hợp phân tích lỗi.
+        Summarize error analysis.
         
         Args:
-            error_df: DataFrame từ analyze_errors.
+            error_df: DataFrame from analyze_errors.
             
         Returns:
-            DataFrame tổng hợp theo loại lỗi.
+            DataFrame summarized by error type.
         """
         summary = error_df.groupby('error_type').agg({
             'y_true': 'count'
@@ -216,14 +216,14 @@ class ModelEvaluator:
         features: List[str]
     ) -> pd.DataFrame:
         """
-        So sánh đặc điểm giữa các nhóm lỗi.
+        Compare characteristics between error groups.
         
         Args:
-            error_df: DataFrame từ analyze_errors.
-            features: Danh sách features cần so sánh.
+            error_df: DataFrame from analyze_errors.
+            features: List of features to compare.
             
         Returns:
-            DataFrame so sánh mean của các features.
+            DataFrame comparing mean of features.
         """
         comparison = error_df.groupby('error_type')[features].mean()
         return comparison
@@ -236,13 +236,13 @@ class ModelEvaluator:
         title: str = 'Confusion Matrix'
     ) -> plt.Axes:
         """
-        Vẽ confusion matrix.
+        Plot confusion matrix.
         
         Args:
             X: Features.
             y: Labels.
             ax: Matplotlib axes.
-            title: Tiêu đề biểu đồ.
+            title: Plot title.
             
         Returns:
             Matplotlib axes.
@@ -254,11 +254,11 @@ class ModelEvaluator:
         
         sns.heatmap(
             cm, annot=True, fmt='d', cmap='Blues', ax=ax,
-            xticklabels=['That bai (0)', 'Thanh cong (1)'],
-            yticklabels=['That bai (0)', 'Thanh cong (1)']
+            xticklabels=['Failed (0)', 'Success (1)'],
+            yticklabels=['Failed (0)', 'Success (1)']
         )
-        ax.set_xlabel('Du doan')
-        ax.set_ylabel('Thuc te')
+        ax.set_xlabel('Predicted')
+        ax.set_ylabel('Actual')
         ax.set_title(title)
         
         return ax
@@ -271,13 +271,13 @@ class ModelEvaluator:
         title: str = 'ROC Curve'
     ) -> plt.Axes:
         """
-        Vẽ đường cong ROC.
+        Plot ROC curve.
         
         Args:
             X: Features.
             y: Labels.
             ax: Matplotlib axes.
-            title: Tiêu đề biểu đồ.
+            title: Plot title.
             
         Returns:
             Matplotlib axes.
@@ -308,13 +308,13 @@ class ModelEvaluator:
         title: str = 'Precision-Recall Curve'
     ) -> plt.Axes:
         """
-        Vẽ đường cong Precision-Recall.
+        Plot Precision-Recall curve.
         
         Args:
             X: Features.
             y: Labels.
             ax: Matplotlib axes.
-            title: Tiêu đề biểu đồ.
+            title: Plot title.
             
         Returns:
             Matplotlib axes.
@@ -344,12 +344,12 @@ class ModelEvaluator:
         title: str = 'Feature Importance'
     ) -> plt.Axes:
         """
-        Vẽ biểu đồ feature importance.
+        Plot feature importance chart.
         
         Args:
-            top_n: Số features hiển thị.
+            top_n: Number of features to display.
             ax: Matplotlib axes.
-            title: Tiêu đề biểu đồ.
+            title: Plot title.
             
         Returns:
             Matplotlib axes.
@@ -376,15 +376,15 @@ class ModelEvaluator:
         y_test: pd.Series
     ) -> pd.DataFrame:
         """
-        Tạo bảng tổng hợp so sánh nhiều mô hình.
+        Generate summary table comparing multiple models.
         
         Args:
-            models_dict: Dictionary chứa các mô hình.
-            X_test: Features test set.
-            y_test: Labels test set.
+            models_dict: Dictionary containing models.
+            X_test: Test set features.
+            y_test: Test set labels.
             
         Returns:
-            DataFrame so sánh các mô hình.
+            DataFrame comparing models.
         """
         data = []
         for name, model in models_dict.items():

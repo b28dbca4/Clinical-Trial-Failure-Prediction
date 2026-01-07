@@ -1,8 +1,8 @@
 """
-Module huấn luyện mô hình cho dự án Clinical Trial Failure Prediction.
+Model training module for Clinical Trial Failure Prediction project.
 
-Cung cấp các class và hàm tiện ích để huấn luyện các mô hình phân loại
-bao gồm Logistic Regression, Random Forest, XGBoost và LightGBM.
+Provides classes and utility functions for training classification models
+including Logistic Regression, Random Forest, XGBoost and LightGBM.
 """
 
 import numpy as np
@@ -23,20 +23,20 @@ import lightgbm as lgb
 
 class ModelTrainer:
     """
-    Lớp huấn luyện và quản lý các mô hình phân loại.
+    Class for training and managing classification models.
     
     Attributes:
-        seed (int): Giá trị random seed để đảm bảo tính tái tạo.
-        models (dict): Dictionary lưu trữ các mô hình đã huấn luyện.
-        results (dict): Dictionary lưu trữ kết quả đánh giá.
+        seed (int): Random seed value to ensure reproducibility.
+        models (dict): Dictionary storing trained models.
+        results (dict): Dictionary storing evaluation results.
     """
     
     def __init__(self, seed: int = 42):
         """
-        Khởi tạo ModelTrainer.
+        Initialize ModelTrainer.
         
         Args:
-            seed: Giá trị random seed.
+            seed: Random seed value.
         """
         self.seed = seed
         self.models = {}
@@ -52,17 +52,17 @@ class ModelTrainer:
         **kwargs
     ) -> LogisticRegression:
         """
-        Huấn luyện mô hình Logistic Regression.
+        Train Logistic Regression model.
         
         Args:
-            X_train: Dữ liệu huấn luyện.
-            y_train: Nhãn huấn luyện.
-            X_val: Dữ liệu validation.
-            y_val: Nhãn validation.
-            **kwargs: Tham số bổ sung cho mô hình.
+            X_train: Training data.
+            y_train: Training labels.
+            X_val: Validation data.
+            y_val: Validation labels.
+            **kwargs: Additional parameters for the model.
             
         Returns:
-            Mô hình LogisticRegression đã huấn luyện.
+            Trained LogisticRegression model.
         """
         default_params = {
             'random_state': self.seed,
@@ -95,17 +95,17 @@ class ModelTrainer:
         **kwargs
     ) -> RandomForestClassifier:
         """
-        Huấn luyện mô hình Random Forest.
+        Train Random Forest model.
         
         Args:
-            X_train: Dữ liệu huấn luyện.
-            y_train: Nhãn huấn luyện.
-            X_val: Dữ liệu validation.
-            y_val: Nhãn validation.
-            **kwargs: Tham số bổ sung cho mô hình.
+            X_train: Training data.
+            y_train: Training labels.
+            X_val: Validation data.
+            y_val: Validation labels.
+            **kwargs: Additional parameters for the model.
             
         Returns:
-            Mô hình RandomForestClassifier đã huấn luyện.
+            Trained RandomForestClassifier model.
         """
         default_params = {
             'n_estimators': 200,
@@ -143,18 +143,18 @@ class ModelTrainer:
         **kwargs
     ) -> xgb.XGBClassifier:
         """
-        Huấn luyện mô hình XGBoost với Early Stopping.
+        Train XGBoost model with Early Stopping.
         
         Args:
-            X_train: Dữ liệu huấn luyện.
-            y_train: Nhãn huấn luyện.
-            X_val: Dữ liệu validation.
-            y_val: Nhãn validation.
-            early_stopping_rounds: Số vòng dừng sớm.
-            **kwargs: Tham số bổ sung cho mô hình.
+            X_train: Training data.
+            y_train: Training labels.
+            X_val: Validation data.
+            y_val: Validation labels.
+            early_stopping_rounds: Number of early stopping rounds.
+            **kwargs: Additional parameters for the model.
             
         Returns:
-            Mô hình XGBClassifier đã huấn luyện.
+            Trained XGBClassifier model.
         """
         scale_pos_weight = (y_train == 0).sum() / (y_train == 1).sum()
         
@@ -201,18 +201,18 @@ class ModelTrainer:
         **kwargs
     ) -> lgb.LGBMClassifier:
         """
-        Huấn luyện mô hình LightGBM với Early Stopping.
+        Train LightGBM model with Early Stopping.
         
         Args:
-            X_train: Dữ liệu huấn luyện.
-            y_train: Nhãn huấn luyện.
-            X_val: Dữ liệu validation.
-            y_val: Nhãn validation.
-            early_stopping_rounds: Số vòng dừng sớm.
-            **kwargs: Tham số bổ sung cho mô hình.
+            X_train: Training data.
+            y_train: Training labels.
+            X_val: Validation data.
+            y_val: Validation labels.
+            early_stopping_rounds: Number of early stopping rounds.
+            **kwargs: Additional parameters for the model.
             
         Returns:
-            Mô hình LGBMClassifier đã huấn luyện.
+            Trained LGBMClassifier model.
         """
         scale_pos_weight = (y_train == 0).sum() / (y_train == 1).sum()
         
@@ -257,17 +257,17 @@ class ModelTrainer:
         param_grid: Optional[Dict] = None
     ) -> xgb.XGBClassifier:
         """
-        Tinh chỉnh tham số XGBoost sử dụng GridSearchCV với Predefined Split.
+        Tune XGBoost parameters using GridSearchCV with Predefined Split.
         
         Args:
-            X_train: Dữ liệu huấn luyện.
-            y_train: Nhãn huấn luyện.
-            X_val: Dữ liệu validation.
-            y_val: Nhãn validation.
-            param_grid: Grid các tham số cần tìm kiếm.
+            X_train: Training data.
+            y_train: Training labels.
+            X_val: Validation data.
+            y_val: Validation labels.
+            param_grid: Grid of parameters to search.
             
         Returns:
-            Mô hình XGBClassifier tối ưu.
+            Optimized XGBClassifier model.
         """
         if param_grid is None:
             param_grid = {
@@ -320,10 +320,10 @@ class ModelTrainer:
     
     def get_comparison_table(self) -> pd.DataFrame:
         """
-        Tạo bảng so sánh các mô hình.
+        Create comparison table of models.
         
         Returns:
-            DataFrame chứa thông tin so sánh.
+            DataFrame containing comparison information.
         """
         data = []
         for name, result in self.results.items():
@@ -339,10 +339,10 @@ class ModelTrainer:
     
     def get_best_model(self) -> Tuple[str, Any]:
         """
-        Lấy mô hình tốt nhất theo ROC-AUC.
+        Get the best model by ROC-AUC score.
         
         Returns:
-            Tuple gồm (tên mô hình, đối tượng mô hình).
+            Tuple of (model name, model object).
         """
         best_name = max(self.results, key=lambda x: self.results[x]['val_auc'])
         return best_name, self.models[best_name]
@@ -356,17 +356,17 @@ class ModelTrainer:
         save_path: Path
     ) -> str:
         """
-        Lưu mô hình và metadata.
+        Save model and metadata.
         
         Args:
-            model: Mô hình cần lưu.
-            model_name: Tên mô hình.
-            feature_columns: Danh sách tên features.
-            metrics: Dictionary các metrics.
-            save_path: Đường dẫn thư mục lưu.
+            model: Model to save.
+            model_name: Model name.
+            feature_columns: List of feature names.
+            metrics: Dictionary of metrics.
+            save_path: Directory path to save to.
             
         Returns:
-            Đường dẫn file đã lưu.
+            Path of saved file.
         """
         save_path = Path(save_path)
         save_path.mkdir(parents=True, exist_ok=True)

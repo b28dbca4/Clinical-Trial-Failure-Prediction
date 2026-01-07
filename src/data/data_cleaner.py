@@ -25,10 +25,8 @@ if not logger.handlers:
     logger.addHandler(handler)
     logger.setLevel(logging.INFO)
 
-
-# =============================================================================
+ 
 # Configuration Class
-# =============================================================================
 
 @dataclass
 class PreprocessConfig:
@@ -50,10 +48,8 @@ class PreprocessConfig:
         d["output_dir"] = str(d["output_dir"])
         return d
 
-
-# =============================================================================
-# Core Functions Used in Notebook
-# =============================================================================
+ 
+# Core Functions Used in Notebook 
 
 def load_raw_data(csv_path: Union[str, Path]) -> pd.DataFrame:
     """Load raw CSV data.
@@ -370,9 +366,9 @@ def split_data(
     split_info["overlap_val_test"] = overlap_val_test
     
     if overlap_train_val + overlap_train_test + overlap_val_test > 0:
-        logger.warning(f"⚠️ Data leakage detected! Overlapping NCT IDs between splits.")
+        logger.warning(f"Data leakage detected! Overlapping NCT IDs between splits.")
     else:
-        logger.info("✅ No overlap between train/val/test splits")
+        logger.info("No overlap between train/val/test splits")
     
     logger.info(f"Split complete: train={len(train):,}, val={len(val):,}, test={len(test):,}")
     
