@@ -242,6 +242,9 @@ class FeatureEngineer:
             result['enrollment_count'] = result['enrollment_count'].fillna(
                 self.params['enrollment_median']
             )
+            
+            result['enrollment_count'] = result['enrollment_count'].clip(lower=0, upper=self.params['enrollment_q99'])
+
             result['enrollment_log'] = np.log1p(result['enrollment_count'])
         
         if 'num_arms' in df.columns:
