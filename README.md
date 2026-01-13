@@ -215,7 +215,7 @@ Tối ưu ngưỡng quyết định:
 
 Bước 1 - Clone repository:
 ```bash
-git clone https://github.com/username/Clinical-Trial-Failure-Prediction.git
+git clone https://github.com/b28dbca4/Clinical-Trial-Failure-Prediction.git
 cd Clinical-Trial-Failure-Prediction
 ```
 
@@ -545,8 +545,7 @@ Thành viên 2:
 
 - Email: 23120415@student.hcmus.edu.vn
 - Email: 23120348@student.hcmus.edu.vn
-- Repository: https://github.com/username/Clinical-Trial-Failure-Prediction
-
+- Repository: https://github.com/b28dbca4/Clinical-Trial-Failure-Prediction
 ---
 
 ## 11. Giấy Phép
