@@ -14,7 +14,6 @@ __pycache__/
 #doc
 *.pdf
 *.docx
-*.pkl
 
 #data 
 *.csv
