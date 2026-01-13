@@ -378,84 +378,78 @@ Các biểu đồ kết quả được lưu trong thư mục reports/figures/ ba
 
 ```
 Clinical-Trial-Failure-Prediction/
-|
-|-- data/
-|   |-- raw/                          # Dữ liệu thô từ API
-|   |   |-- ctgov_raw.jsonl           # Dữ liệu JSON Lines gốc
-|   |   |-- ctgov_metadata.json       # Metadata quá trình thu thập
-|   |   |-- logs/                     # Log files
-|   |
-|   |-- processed/                    # Dữ liệu đã xử lý
-|   |   |-- ctgov_flat.csv            # Dữ liệu đã làm phẳng
-|   |   |-- clean_data.csv            # Dữ liệu đã làm sạch
-|   |   |-- data_dictionary.csv       # Từ điển dữ liệu
-|   |   |-- data_dictionary.json      # Từ điển dữ liệu (JSON)
-|   |   |-- split_manifest.json       # Thông tin phân chia dữ liệu
-|   |   |-- modeling/                 # Dữ liệu cho modeling
-|   |       |-- train_data.csv        # Tập huấn luyện
-|   |       |-- val_data.csv          # Tập validation
-|   |       |-- test_data.csv         # Tập kiểm thử
-|   |       |-- *_features.csv        # Dữ liệu sau feature engineering
-|   |       |-- feature_dictionary.json
-|   |       |-- fe_params.json        # Tham số feature engineering
-|   |
-|   |-- final/                        # Dữ liệu cuối cùng (nếu có)
-|
-|-- models/
-|   |-- best_model.joblib             # Mô hình tốt nhất đã lưu
-|   |-- model_config.json             # Cấu hình mô hình
-|   |-- clinical_trial_model_*.joblib # Các phiên bản mô hình
-|
-|-- notebooks/
-|   |-- 01_data_collection.ipynb      # Thu thập dữ liệu từ API
-|   |-- 02_data_preprocessing.ipynb   # Tiền xử lý và làm sạch
-|   |-- 03_eda_and_questions.ipynb    # Phân tích khám phá và câu hỏi NC
-|   |-- 04_feature_engineering.ipynb  # Tạo đặc trưng
-|   |-- 05_modeling.ipynb             # Huấn luyện và đánh giá mô hình
-|   |-- 06_summary.ipynb              # Tổng kết và khuyến nghị
-|
-|-- reports/
-|   |-- figures/                      # Biểu đồ và hình ảnh
-|   |   |-- eda_plots/                # Biểu đồ EDA
-|   |   |-- model_results/            # Kết quả mô hình
-|   |-- presentations/                # Slide thuyết trình
-|   |-- monitoring_report_*.json      # Báo cáo monitoring
-|
-|-- src/
-|   |-- __init__.py
-|   |-- data/                         # Module xử lý dữ liệu
-|   |   |-- __init__.py
-|   |   |-- data_loader.py            # Tải và đọc dữ liệu
-|   |   |-- data_cleaner.py           # Làm sạch dữ liệu
-|   |   |-- feature_engineering.py    # Tạo đặc trưng
-|   |
-|   |-- models/                       # Module mô hình
-|   |   |-- __init__.py
-|   |   |-- model_trainer.py          # Huấn luyện mô hình
-|   |   |-- model_evaluator.py        # Đánh giá mô hình
-|   |   |-- threshold_optimizer.py    # Tối ưu ngưỡng quyết định
-|   |   |-- calibration_utils.py      # Hiệu chuẩn xác suất
-|   |   |-- advanced_evaluation.py    # Đánh giá nâng cao
-|   |
-|   |-- visualization/                # Module trực quan hóa
-|   |   |-- __init__.py
-|   |   |-- plot_utils.py             # Các hàm vẽ biểu đồ
-|   |   |-- dashboard.py              # Dashboard tương tác
-|   |
-|   |-- utils/                        # Module tiện ích
-|   |   |-- __init__.py
-|   |   |-- config.py                 # Cấu hình chung
-|   |   |-- monitoring.py             # Giám sát và logging
-|   |
-|   |-- test/                         # Unit tests
-|       |-- __init__.py
-|       |-- test_data_processing.py
-|       |-- test_models.py
-|
-|-- environment.yml                   # Môi trường Conda
-|-- requirements.txt                  # Dependencies pip
-|-- README.md                         # Tài liệu dự án
-|-- LICENSE                           # Giấy phép Apache 2.0
+├── data/
+│   ├── raw/                          # Dữ liệu thô từ API
+│   │   ├── ctgov_raw.jsonl           # Dữ liệu JSON Lines gốc
+│   │   ├── ctgov_metadata.json       # Metadata quá trình thu thập
+│   │   └── logs/                     # Log files
+│   │
+│   ├── processed/                    # Dữ liệu đã xử lý
+│   │   ├── ctgov_flat.csv            # Dữ liệu đã làm phẳng
+│   │   ├── clean_data.csv            # Dữ liệu đã làm sạch
+│   │   ├── data_dictionary.csv       # Từ điển dữ liệu
+│   │   ├── data_dictionary.json      # Từ điển dữ liệu (JSON)
+│   │   ├── split_manifest.json       # Thông tin phân chia dữ liệu
+│   │   └── modeling/                 # Dữ liệu cho modeling
+│   │       ├── train_data.csv        # Tập huấn luyện
+│   │       ├── val_data.csv          # Tập validation
+│   │       ├── test_data.csv         # Tập kiểm thử
+│   │       ├── *_features.csv        # Dữ liệu sau feature engineering
+│   │       ├── feature_dictionary.json # Từ điển/miêu tả các feature sau FE
+│   │       └── fe_params.json        # Tham số feature engineering
+│   │
+│   └── final/                        # Dữ liệu cuối cùng
+│           ├── models/
+│           ├── best_model.joblib             # Mô hình tốt nhất đã lưu
+│           ├── model_config.json             # Cấu hình mô hình (loại model, tham số, đường dẫn feature,...)
+│           └── clinical_trial_model_*.joblib # Các phiên bản mô hình theo lần chạy / thời điểm
+│
+│
+├── notebooks/
+│   ├── 01_data_collection.ipynb      # Thu thập dữ liệu từ API
+│   ├── 02_data_preprocessing.ipynb   # Tiền xử lý và làm sạch
+│   ├── 03_eda_and_questions.ipynb    # Phân tích khám phá và câu hỏi nghiên cứu
+│   ├── 04_feature_engineering.ipynb  # Tạo đặc trưng
+│   ├── 05_modeling.ipynb             # Huấn luyện và đánh giá mô hình
+│   └── 06_summary.ipynb              # Tổng kết và khuyến nghị
+│
+├── reports/
+│   ├── figures/                      # Biểu đồ và hình ảnh xuất ra
+│   │   ├── eda_plots/                # Biểu đồ EDA
+│   │   └── model_results/            # Hình/kết quả đánh giá mô hình (ROC, PR, confusion matrix,...)
+│   └── monitoring_report_*.json      # Báo cáo monitoring theo từng lần chạy / batch
+│
+├── src/
+│   ├── __init__.py                   # Khởi tạo package src
+│   ├── data/                         # Module xử lý dữ liệu
+│   │   ├── __init__.py               # Khởi tạo subpackage data
+│   │   ├── data_loader.py            # Tải/đọc dữ liệu (raw/processed)
+│   │   ├── data_cleaner.py           # Làm sạch dữ liệu
+│   │   └── feature_engineering.py    # Sinh feature, biến đổi, lưu feature + params
+│   │
+│   ├── models/                       # Module mô hình
+│   │   ├── __init__.py               # Khởi tạo subpackage models
+│   │   ├── model_trainer.py          # Huấn luyện mô hình
+│   │   ├── model_evaluator.py        # Đánh giá mô hình
+│   │   ├── threshold_optimizer.py    # Tối ưu ngưỡng quyết định 
+│   │   ├── calibration_utils.py      # Hiệu chuẩn xác suất 
+│   │   └── advanced_evaluation.py    # Đánh giá nâng cao 
+│   │
+│   ├── visualization/                # Module trực quan hoá
+│   │   ├── __init__.py               # Khởi tạo subpackage visualization
+│   │   ├── plot_utils.py             # Hàm vẽ chung 
+│   │   └── dashboard.py              # Dashboard tương tác để theo dõi kết quả
+│   │
+│   └── utils/                        # Module tiện ích dùng chung
+│       ├── __init__.py               # Khởi tạo subpackage utils
+│       ├── config.py                 # Cấu hình chung (path, seed, param mặc định, env vars)
+│       └── monitoring.py             # Giám sát & logging (run log, data drift, model drift,...)
+│
+├── environment.yml                   # Môi trường Conda (python + dependencies + channels)
+├── requirements.txt                  # Danh sách dependencies cho pip (phiên bản gợi ý)
+├── README.md                         # Tài liệu dự án (mục tiêu, setup, hướng dẫn chạy)
+└── LICENSE                           # Giấy phép Apache 2.0
+
 ```
 
 ---
@@ -491,10 +485,6 @@ Thách thức 5 - Tối ưu hyperparameter:
 Thách thức 6 - Survivorship Bias:
 - Vấn đề: Thử nghiệm thất bại thường kết thúc sớm hơn, gây nhiễu trong phân tích thời gian.
 - Giải pháp: Nhận thức rõ hạn chế này khi diễn giải kết quả, tập trung vào các yếu tố có thể đo lường tại thời điểm bắt đầu thử nghiệm.
-
-Thách thức 7 - Tương quan vs Nhân quả:
-- Vấn đề: Khó phân biệt mối quan hệ nhân quả thực sự với tương quan thống kê.
-- Giải pháp: Kết hợp kiến thức chuyên môn y dược với phân tích thống kê, sử dụng nhiều phương pháp kiểm định để xác nhận các phát hiện.
 
 ---
 

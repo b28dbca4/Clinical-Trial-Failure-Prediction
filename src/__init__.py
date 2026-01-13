@@ -1,6 +1,5 @@
 """
 Clinical Trial Failure Prediction Package
-==========================================
 
 This package provides tools for predicting clinical trial failures using machine learning.
 

@@ -1,11 +1,11 @@
 """
-Module phan tich Calibration cho mo hinh phan lop.
+Calibration Analysis Module for classification models.
 
-Cung cap cac cong cu danh gia do tin cay cua xac suat du doan:
+Provides tools to evaluate the reliability of predicted probabilities:
 - Calibration curve (Reliability diagram)
 - Brier score
 - Expected Calibration Error (ECE)
-- So sanh calibration giua cac mo hinh
+- Comparison of calibration between models
 """
 
 import numpy as np
@@ -19,20 +19,20 @@ from sklearn.metrics import brier_score_loss
 
 class CalibrationAnalyzer:
     """
-    Lop phan tich calibration cua mo hinh phan lop.
+    Calibration analysis class for classification models.
     
-    Calibration tot nghia la khi mo hinh du doan xac suat p,
-    ty le thuc te cua su kien xay ra gan bang p.
+    Good calibration means that when the model predicts probability p,
+    the actual rate of the event occurring is close to p.
     """
     
     def __init__(self, y_true: np.ndarray, y_proba: np.ndarray, model_name: str = 'Model'):
         """
-        Khoi tao CalibrationAnalyzer.
+        Initialize CalibrationAnalyzer.
         
         Args:
-            y_true: Nhan thuc te.
-            y_proba: Xac suat du doan.
-            model_name: Ten mo hinh.
+            y_true: True labels.
+            y_proba: Predicted probabilities.
+            model_name: Model name.
         """
         self.y_true = np.array(y_true)
         self.y_proba = np.array(y_proba)
@@ -40,10 +40,10 @@ class CalibrationAnalyzer:
         
     def compute_brier_score(self) -> float:
         """
-        Tinh Brier score.
+        Compute Brier score.
         
         Brier score = mean((y_proba - y_true)^2)
-        Gia tri thap hon la tot hon (0 = hoan hao, 1 = te nhat).
+        Lower values are better (0 = perfect, 1 = worst).
         
         Returns:
             Brier score.
@@ -52,10 +52,10 @@ class CalibrationAnalyzer:
     
     def compute_calibration_curve(self, n_bins: int = 10) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Tinh calibration curve.
+        Compute calibration curve.
         
         Args:
-            n_bins: So bin de chia xac suat.
+            n_bins: Number of bins to divide probabilities.
             
         Returns:
             Tuple (fraction_of_positives, mean_predicted_value).
@@ -67,12 +67,12 @@ class CalibrationAnalyzer:
     
     def compute_ece(self, n_bins: int = 10) -> float:
         """
-        Tinh Expected Calibration Error (ECE).
+        Compute Expected Calibration Error (ECE).
         
         ECE = sum(|bin_accuracy - bin_confidence| * bin_size) / total_samples
         
         Args:
-            n_bins: So bin de chia xac suat.
+            n_bins: Number of bins to divide probabilities.
             
         Returns:
             ECE score.
@@ -94,12 +94,12 @@ class CalibrationAnalyzer:
     
     def compute_mce(self, n_bins: int = 10) -> float:
         """
-        Tinh Maximum Calibration Error (MCE).
+        Compute Maximum Calibration Error (MCE).
         
         MCE = max(|bin_accuracy - bin_confidence|)
         
         Args:
-            n_bins: So bin de chia xac suat.
+            n_bins: Number of bins to divide probabilities.
             
         Returns:
             MCE score.
@@ -121,13 +121,13 @@ class CalibrationAnalyzer:
     
     def get_calibration_summary(self, n_bins: int = 10) -> Dict:
         """
-        Lay tong hop cac chi so calibration.
+        Get summary of calibration metrics.
         
         Args:
-            n_bins: So bin de chia xac suat.
+            n_bins: Number of bins to divide probabilities.
             
         Returns:
-            Dictionary chua cac chi so.
+            Dictionary containing metrics.
         """
         return {
             'model_name': self.model_name,
@@ -140,13 +140,13 @@ class CalibrationAnalyzer:
     
     def get_bin_analysis(self, n_bins: int = 10) -> pd.DataFrame:
         """
-        Phan tich chi tiet theo tung bin.
+        Detailed analysis by each bin.
         
         Args:
-            n_bins: So bin de chia xac suat.
+            n_bins: Number of bins to divide probabilities.
             
         Returns:
-            DataFrame chua phan tich theo bin.
+            DataFrame containing bin analysis.
         """
         bin_boundaries = np.linspace(0, 1, n_bins + 1)
         results = []
@@ -176,11 +176,11 @@ class CalibrationAnalyzer:
     
     def plot_calibration_curve(self, ax: plt.Axes = None, n_bins: int = 10) -> plt.Axes:
         """
-        Ve calibration curve (Reliability diagram).
+        Plot calibration curve (Reliability diagram).
         
         Args:
             ax: Matplotlib axes.
-            n_bins: So bin.
+            n_bins: Number of bins.
             
         Returns:
             Matplotlib axes.
@@ -208,11 +208,11 @@ class CalibrationAnalyzer:
     
     def plot_probability_histogram(self, ax: plt.Axes = None, n_bins: int = 20) -> plt.Axes:
         """
-        Ve histogram phan phoi xac suat du doan.
+        Plot histogram of predicted probability distribution.
         
         Args:
             ax: Matplotlib axes.
-            n_bins: So bin.
+            n_bins: Number of bins.
             
         Returns:
             Matplotlib axes.
@@ -240,15 +240,15 @@ def compare_calibration(
     n_bins: int = 10
 ) -> pd.DataFrame:
     """
-    So sanh calibration giua nhieu mo hinh.
+    Compare calibration between multiple models.
     
     Args:
-        y_true: Nhan thuc te.
-        models_proba: Dictionary {ten_model: xac_suat_du_doan}.
-        n_bins: So bin de phan tich.
+        y_true: True labels.
+        models_proba: Dictionary {model_name: predicted_probabilities}.
+        n_bins: Number of bins for analysis.
         
     Returns:
-        DataFrame so sanh cac mo hinh.
+        DataFrame comparing models.
     """
     results = []
     
@@ -270,13 +270,13 @@ def plot_multi_calibration_curves(
     figsize: Tuple[int, int] = (10, 8)
 ) -> plt.Figure:
     """
-    Ve calibration curves cho nhieu mo hinh tren cung mot do thi.
+    Plot calibration curves for multiple models on the same graph.
     
     Args:
-        y_true: Nhan thuc te.
-        models_proba: Dictionary {ten_model: xac_suat_du_doan}.
-        n_bins: So bin.
-        figsize: Kich thuoc figure.
+        y_true: True labels.
+        models_proba: Dictionary {model_name: predicted_probabilities}.
+        n_bins: Number of bins.
+        figsize: Figure size.
         
     Returns:
         Matplotlib figure.

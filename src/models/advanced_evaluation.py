@@ -1,9 +1,9 @@
 """
-Module danh gia mo hinh nang cao (Advanced Model Evaluation).
+Advanced Model Evaluation Module.
 
-Cung cap cac cong cu danh gia toan dien cho bai toan phan lop nhi phan
-voi du lieu mat can bang:
-- Tinh toan nhieu metric dong thoi
+Provides comprehensive evaluation tools for binary classification problems
+with imbalanced data:
+- Simultaneous calculation of multiple metrics
 - Cross-validation stability analysis
 - Bootstrap confidence intervals
 - Model comparison
@@ -23,18 +23,18 @@ import warnings
 
 class AdvancedModelEvaluator:
     """
-    Lop danh gia mo hinh nang cao cho bai toan phan lop nhi phan.
+    Advanced model evaluation class for binary classification problems.
     
     Attributes:
-        pos_label: Nhan cua lop duong (positive class).
+        pos_label: Label of the positive class.
     """
     
     def __init__(self, pos_label: int = 1):
         """
-        Khoi tao AdvancedModelEvaluator.
+        Initialize AdvancedModelEvaluator.
         
         Args:
-            pos_label: Nhan cua lop duong.
+            pos_label: Label of the positive class.
         """
         self.pos_label = pos_label
         
@@ -45,15 +45,15 @@ class AdvancedModelEvaluator:
         y_proba: np.ndarray
     ) -> Dict:
         """
-        Tinh toan bo metric day du cho bai toan mat can bang.
+        Compute comprehensive metrics for imbalanced problems.
         
         Args:
-            y_true: Nhan thuc te.
-            y_pred: Du doan nhi phan.
-            y_proba: Xac suat du doan lop duong.
+            y_true: True labels.
+            y_pred: Binary predictions.
+            y_proba: Predicted probabilities for positive class.
             
         Returns:
-            Dictionary chua tat ca cac metric.
+            Dictionary containing all metrics.
         """
         metrics = {}
         
@@ -93,15 +93,15 @@ class AdvancedModelEvaluator:
         threshold: float = 0.5
     ) -> Dict:
         """
-        Tinh metric tai mot nguong cu the.
+        Compute metrics at a specific threshold.
         
         Args:
-            y_true: Nhan thuc te.
-            y_proba: Xac suat du doan.
-            threshold: Nguong quyet dinh.
+            y_true: True labels.
+            y_proba: Predicted probabilities.
+            threshold: Decision threshold.
             
         Returns:
-            Dictionary chua cac metric.
+            Dictionary containing metrics.
         """
         y_pred = (y_proba >= threshold).astype(int)
         metrics = self.compute_comprehensive_metrics(y_true, y_pred, y_proba)
@@ -117,17 +117,17 @@ class AdvancedModelEvaluator:
         random_state: int = 42
     ) -> Dict:
         """
-        Thuc hien Stratified K-Fold Cross-Validation.
+        Perform Stratified K-Fold Cross-Validation.
         
         Args:
-            model: Mo hinh (phai co fit va predict_proba).
+            model: Model (must have fit and predict_proba).
             X: Features.
             y: Labels.
-            n_splits: So fold.
+            n_splits: Number of folds.
             random_state: Random seed.
             
         Returns:
-            Dictionary chua ket qua CV (mean, std cua cac metric).
+            Dictionary containing CV results (mean, std of metrics).
         """
         skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=random_state)
         
@@ -180,18 +180,18 @@ class AdvancedModelEvaluator:
         random_state: int = 42
     ) -> Dict:
         """
-        Tinh khoang tin cay bang Bootstrap.
+        Compute confidence interval using Bootstrap.
         
         Args:
-            y_true: Nhan thuc te.
-            y_proba: Xac suat du doan.
-            metric_func: Ham tinh metric (nhan y_true, y_proba).
-            n_bootstrap: So lan bootstrap.
-            confidence_level: Muc tin cay (0.95 = 95%).
+            y_true: True labels.
+            y_proba: Predicted probabilities.
+            metric_func: Metric calculation function (takes y_true, y_proba).
+            n_bootstrap: Number of bootstrap samples.
+            confidence_level: Confidence level (0.95 = 95%).
             random_state: Random seed.
             
         Returns:
-            Dictionary chua point estimate va confidence interval.
+            Dictionary containing point estimate and confidence interval.
         """
         np.random.seed(random_state)
         n_samples = len(y_true)
@@ -235,16 +235,16 @@ class AdvancedModelEvaluator:
         confidence_level: float = 0.95
     ) -> Dict:
         """
-        Tinh khoang tin cay cho PR-AUC.
+        Compute confidence interval for PR-AUC.
         
         Args:
-            y_true: Nhan thuc te.
-            y_proba: Xac suat du doan.
-            n_bootstrap: So lan bootstrap.
-            confidence_level: Muc tin cay.
+            y_true: True labels.
+            y_proba: Predicted probabilities.
+            n_bootstrap: Number of bootstrap samples.
+            confidence_level: Confidence level.
             
         Returns:
-            Dictionary chua PR-AUC va CI.
+            Dictionary containing PR-AUC and CI.
         """
         return self.bootstrap_confidence_interval(
             y_true, y_proba,
@@ -261,16 +261,16 @@ class AdvancedModelEvaluator:
         confidence_level: float = 0.95
     ) -> Dict:
         """
-        Tinh khoang tin cay cho ROC-AUC.
+        Compute confidence interval for ROC-AUC.
         
         Args:
-            y_true: Nhan thuc te.
-            y_proba: Xac suat du doan.
-            n_bootstrap: So lan bootstrap.
-            confidence_level: Muc tin cay.
+            y_true: True labels.
+            y_proba: Predicted probabilities.
+            n_bootstrap: Number of bootstrap samples.
+            confidence_level: Confidence level.
             
         Returns:
-            Dictionary chua ROC-AUC va CI.
+            Dictionary containing ROC-AUC and CI.
         """
         return self.bootstrap_confidence_interval(
             y_true, y_proba,
@@ -287,16 +287,16 @@ def compare_models_comprehensive(
     threshold: float = 0.5
 ) -> pd.DataFrame:
     """
-    So sanh toan dien nhieu mo hinh.
+    Comprehensive comparison of multiple models.
     
     Args:
-        models_dict: Dictionary {ten_model: model_object}.
+        models_dict: Dictionary {model_name: model_object}.
         X_test: Test features.
         y_test: Test labels.
-        threshold: Nguong quyet dinh.
+        threshold: Decision threshold.
         
     Returns:
-        DataFrame so sanh cac mo hinh.
+        DataFrame comparing models.
     """
     evaluator = AdvancedModelEvaluator()
     results = []
@@ -331,16 +331,16 @@ def create_metrics_heatmap_data(
     threshold: float = 0.5
 ) -> pd.DataFrame:
     """
-    Tao du lieu cho heatmap so sanh metric giua cac mo hinh.
+    Create data for heatmap comparing metrics between models.
     
     Args:
-        models_dict: Dictionary {ten_model: model_object}.
+        models_dict: Dictionary {model_name: model_object}.
         X_test: Test features.
         y_test: Test labels.
-        threshold: Nguong quyet dinh.
+        threshold: Decision threshold.
         
     Returns:
-        DataFrame voi index la model, columns la metric.
+        DataFrame with index as model, columns as metrics.
     """
     df = compare_models_comprehensive(models_dict, X_test, y_test, threshold)
     
@@ -363,15 +363,15 @@ def analyze_class_imbalance_impact(
     y_pred: np.ndarray
 ) -> Dict:
     """
-    Phan tich tac dong cua mat can bang lop.
+    Analyze the impact of class imbalance.
     
     Args:
-        y_true: Nhan thuc te.
-        y_proba: Xac suat du doan.
-        y_pred: Du doan nhi phan.
+        y_true: True labels.
+        y_proba: Predicted probabilities.
+        y_pred: Binary predictions.
         
     Returns:
-        Dictionary chua phan tich.
+        Dictionary containing analysis.
     """
     n_pos = (y_true == 1).sum()
     n_neg = (y_true == 0).sum()

@@ -1,9 +1,9 @@
 """
-Module toi uu hoa nguong quyet dinh (Threshold Optimization) cho bai toan phan lop nhi phan.
+Threshold Optimization Module for binary classification problems.
 
-Cung cap cac chien luoc toi uu nguong bao gom:
-- Toi da F1-Score
-- Dam bao Recall toi thieu
+Provides threshold optimization strategies including:
+- Maximize F1-Score
+- Ensure minimum Recall
 - Youden's J statistic
 - Cost-sensitive optimization
 """
@@ -19,20 +19,20 @@ from sklearn.metrics import (
 
 class ThresholdOptimizer:
     """
-    Lop toi uu hoa nguong quyet dinh cho mo hinh phan lop nhi phan.
+    Threshold optimization class for binary classification models.
     
     Attributes:
-        y_true: Nhan thuc te.
-        y_proba: Xac suat du doan cua lop duong (positive class).
+        y_true: True labels.
+        y_proba: Predicted probabilities for the positive class.
     """
     
     def __init__(self, y_true: np.ndarray, y_proba: np.ndarray):
         """
-        Khoi tao ThresholdOptimizer.
+        Initialize ThresholdOptimizer.
         
         Args:
-            y_true: Nhan thuc te (0 hoac 1).
-            y_proba: Xac suat du doan cua lop duong.
+            y_true: True labels (0 or 1).
+            y_proba: Predicted probabilities for the positive class.
         """
         self.y_true = np.array(y_true)
         self.y_proba = np.array(y_proba)
@@ -40,13 +40,13 @@ class ThresholdOptimizer:
         
     def _compute_metrics_at_threshold(self, threshold: float) -> Dict:
         """
-        Tinh toan cac metric tai mot nguong cu the.
+        Compute metrics at a specific threshold.
         
         Args:
-            threshold: Nguong quyet dinh.
+            threshold: Decision threshold.
             
         Returns:
-            Dictionary chua cac metric.
+            Dictionary containing metrics.
         """
         y_pred = (self.y_proba >= threshold).astype(int)
         
@@ -72,10 +72,10 @@ class ThresholdOptimizer:
     
     def find_optimal_f1(self) -> Dict:
         """
-        Tim nguong toi uu hoa F1-Score.
+        Find threshold that optimizes F1-Score.
         
         Returns:
-            Dictionary chua nguong toi uu va cac metric.
+            Dictionary containing optimal threshold and metrics.
         """
         best_f1 = 0
         best_result = None
@@ -91,13 +91,13 @@ class ThresholdOptimizer:
     
     def find_threshold_for_recall(self, min_recall: float = 0.8) -> Dict:
         """
-        Tim nguong dam bao Recall toi thieu.
+        Find threshold that ensures minimum Recall.
         
         Args:
-            min_recall: Nguong Recall toi thieu can dat.
+            min_recall: Minimum Recall threshold to achieve.
             
         Returns:
-            Dictionary chua nguong va cac metric.
+            Dictionary containing threshold and metrics.
         """
         valid_results = []
         
@@ -116,10 +116,10 @@ class ThresholdOptimizer:
     
     def find_youden_threshold(self) -> Dict:
         """
-        Tim nguong theo Youden's J statistic (Sensitivity + Specificity - 1).
+        Find threshold using Youden's J statistic (Sensitivity + Specificity - 1).
         
         Returns:
-            Dictionary chua nguong toi uu va cac metric.
+            Dictionary containing optimal threshold and metrics.
         """
         best_j = -1
         best_result = None
@@ -138,10 +138,10 @@ class ThresholdOptimizer:
     
     def get_threshold_analysis_table(self) -> pd.DataFrame:
         """
-        Tao bang phan tich nguong voi nhieu gia tri.
+        Create threshold analysis table with multiple values.
         
         Returns:
-            DataFrame chua phan tich nguong.
+            DataFrame containing threshold analysis.
         """
         analysis_thresholds = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
         results = []
@@ -154,10 +154,10 @@ class ThresholdOptimizer:
     
     def get_all_optimal_thresholds(self) -> pd.DataFrame:
         """
-        Tong hop tat ca cac chien luoc tim nguong toi uu.
+        Summarize all optimal threshold finding strategies.
         
         Returns:
-            DataFrame so sanh cac chien luoc.
+            DataFrame comparing strategies.
         """
         results = []
         
@@ -216,19 +216,19 @@ class ThresholdOptimizer:
 
 class CostSensitiveOptimizer:
     """
-    Toi uu nguong dua tren chi phi (Cost-sensitive Threshold Optimization).
+    Cost-sensitive threshold optimization.
     
-    Cho phep xac dinh nguong toi uu khi co chi phi khac nhau cho 
-    False Positive va False Negative.
+    Allows determining optimal threshold when there are different costs for
+    False Positive and False Negative.
     """
     
     def __init__(self, y_true: np.ndarray, y_proba: np.ndarray):
         """
-        Khoi tao CostSensitiveOptimizer.
+        Initialize CostSensitiveOptimizer.
         
         Args:
-            y_true: Nhan thuc te.
-            y_proba: Xac suat du doan.
+            y_true: True labels.
+            y_proba: Predicted probabilities.
         """
         self.y_true = np.array(y_true)
         self.y_proba = np.array(y_proba)
@@ -242,16 +242,16 @@ class CostSensitiveOptimizer:
         cost_tn: float = 0.0
     ) -> Dict:
         """
-        Tim nguong toi thieu tong chi phi.
+        Find threshold that minimizes total cost.
         
         Args:
-            cost_fp: Chi phi cho False Positive.
-            cost_fn: Chi phi cho False Negative.
-            cost_tp: Chi phi cho True Positive (thuong la 0 hoac am).
-            cost_tn: Chi phi cho True Negative (thuong la 0 hoac am).
+            cost_fp: Cost for False Positive.
+            cost_fn: Cost for False Negative.
+            cost_tp: Cost for True Positive (usually 0 or negative).
+            cost_tn: Cost for True Negative (usually 0 or negative).
             
         Returns:
-            Dictionary chua nguong toi uu va chi phi.
+            Dictionary containing optimal threshold and cost.
         """
         best_cost = float('inf')
         best_result = None
@@ -290,10 +290,10 @@ class CostSensitiveOptimizer:
     
     def analyze_cost_scenarios(self) -> pd.DataFrame:
         """
-        Phan tich nhieu kich ban chi phi.
+        Analyze multiple cost scenarios.
         
         Returns:
-            DataFrame chua ket qua phan tich.
+            DataFrame containing analysis results.
         """
         scenarios = [
             {'name': 'Equal Cost', 'cost_fp': 1, 'cost_fn': 1},
